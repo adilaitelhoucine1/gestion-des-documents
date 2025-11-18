@@ -7,6 +7,7 @@ import org.example.gestiondesdocuments.repository.RoleRepository;
 import org.example.gestiondesdocuments.repository.SocietyRepository;
 import org.example.gestiondesdocuments.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -18,11 +19,13 @@ public class DataInitializer implements CommandLineRunner {
     private final UserRepository userRepository;
     private final SocietyRepository societyRepository;
     private final RoleRepository roleRepository;
+        private final PasswordEncoder passwordEncoder;
 
-    public DataInitializer(UserRepository userRepository, SocietyRepository societyRepository, RoleRepository roleRepository) {
+    public DataInitializer(UserRepository userRepository, SocietyRepository societyRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.societyRepository = societyRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -48,10 +51,10 @@ public class DataInitializer implements CommandLineRunner {
                 .build();
         societe = societyRepository.save(societe);
 
-        // Create and save users with saved entities
+
         Utilisateur utilisateur1 = Utilisateur.builder()
                 .email("user1@example.com")
-                .motDePasse("password123") // à encoder avec BCrypt pour production
+                .motDePasse(passwordEncoder.encode("password123"))
                 .nomComplet("Ahmed El Houcine")
                 .societe(societe)
                 .actif(true)
@@ -60,9 +63,9 @@ public class DataInitializer implements CommandLineRunner {
 
         Utilisateur utilisateur2 = Utilisateur.builder()
                 .email("comptable1@example.com")
-                .motDePasse("secret456")
+                .motDePasse(passwordEncoder.encode("secret456"))
                 .nomComplet("Fatima Zahra")
-                .societe(null) // Comptable peut ne pas avoir de société rattachée
+                .societe(null)
                 .actif(true)
                 .roles(Set.of(roleComptable))
                 .build();
