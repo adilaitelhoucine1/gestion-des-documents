@@ -1,4 +1,4 @@
-package org.example.gestiondesdocuments.dto;
+package org.example.gestiondesdocuments.dto.Auth;
 
 import java.util.List;
 

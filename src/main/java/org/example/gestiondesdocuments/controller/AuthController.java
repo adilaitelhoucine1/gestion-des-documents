@@ -2,8 +2,8 @@ package org.example.gestiondesdocuments.controller;
 
 import jakarta.validation.Valid;
 import org.example.gestiondesdocuments.dto.ErrorResponse;
-import org.example.gestiondesdocuments.dto.LoginRequest;
-import org.example.gestiondesdocuments.dto.LoginResponse;
+import org.example.gestiondesdocuments.dto.Auth.LoginRequest;
+import org.example.gestiondesdocuments.dto.Auth.LoginResponse;
 import org.example.gestiondesdocuments.security.JwtTokenService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

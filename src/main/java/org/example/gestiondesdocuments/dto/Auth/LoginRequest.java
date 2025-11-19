@@ -1,4 +1,4 @@
-package org.example.gestiondesdocuments.dto;
+package org.example.gestiondesdocuments.dto.Auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
