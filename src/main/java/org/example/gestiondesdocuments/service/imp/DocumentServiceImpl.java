@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -121,6 +122,11 @@ public class DocumentServiceImpl implements DocumentService {
         } catch (IOException e) {
             throw new RuntimeException("Impossible de sauvegarder le fichier: " + e.getMessage());
         }
+    }
+
+    public List<DocumentUploadResponse> getAllDocuments(){
+       return documentRepository.findAll().stream()
+                .map(documentMapper::toUploadResponse).toList();
     }
 }
 
