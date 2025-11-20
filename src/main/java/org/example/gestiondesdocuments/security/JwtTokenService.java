@@ -34,24 +34,19 @@ public class JwtTokenService {
                 .compact();
     }
 
-    // Get username from token
-    public String getUsernameFromToken(String token) {
+     public String getUsernameFromToken(String token) {
         return getAllClaimsFromToken(token).getSubject();
     }
 
-    // Validate token
-    public Boolean validateToken(String token, UserDetails userDetails) {
+     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
-
-    // Check if token is expired
-    private Boolean isTokenExpired(String token) {
+     private Boolean isTokenExpired(String token) {
         return getAllClaimsFromToken(token).getExpiration().before(new Date());
     }
 
-    // Get all claims from token
-    private Claims getAllClaimsFromToken(String token) {
+     private Claims getAllClaimsFromToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()

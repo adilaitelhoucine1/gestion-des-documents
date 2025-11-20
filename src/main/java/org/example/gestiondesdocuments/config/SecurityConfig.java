@@ -39,12 +39,13 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers( "/api/auth/**").permitAll()
-
+                        .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/api/comptable/**").hasRole("COMPTABLE")
                         .requestMatchers("/api/societe/**").hasRole("SOCIETE")
                         .anyRequest().authenticated()
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
