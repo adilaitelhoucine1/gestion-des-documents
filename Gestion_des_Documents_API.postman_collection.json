@@ -239,6 +239,33 @@
 				},
 				{
 					"name": "Upload Document",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Response has required fields\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property(\"id\");",
+									"    pm.expect(jsonData).to.have.property(\"numeroPiece\");",
+									"    pm.expect(jsonData).to.have.property(\"statut\");",
+									"    pm.expect(jsonData.statut).to.eql(\"EN_ATTENTE\");",
+									"});",
+									"",
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"last_document_id\", jsonData.id);",
+									"    console.log(\"Document uploadé avec ID: \" + jsonData.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -252,20 +279,137 @@
 						},
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "document",
+									"value": "{\n    \"numeroPiece\": \"FAC-2024-001\",\n    \"type\": \"FACTURE_ACHAT\",\n    \"categorieComptable\": \"Achats de marchandises\",\n    \"datePiece\": \"2024-11-15\",\n    \"montant\": 1250.50,\n    \"fournisseur\": \"Fournisseur XYZ\",\n    \"exerciceComptable\": \"2024\",\n    \"commentaireComptable\": \"Achat de matériel informatique\"\n}",
+									"contentType": "application/json",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
 						"url": {
-							"raw": "{{base_url}}/api/societe/documents/upload",
+							"raw": "{{base_url}}/api/documents/upload",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
-								"societe",
 								"documents",
 								"upload"
 							]
 						},
-						"description": "Upload new document (implementation needed)"
-					}
+						"description": "Upload a new document with file attachment (PDF, JPG, PNG up to 10MB)"
+					},
+					"response": [
+						{
+							"name": "Successful Upload",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{jwt_token}}"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "document",
+											"value": "{\n    \"numeroPiece\": \"FAC-2024-001\",\n    \"type\": \"FACTURE_ACHAT\",\n    \"categorieComptable\": \"Achats\",\n    \"datePiece\": \"2024-11-15\",\n    \"montant\": 1250.50,\n    \"fournisseur\": \"Fournisseur XYZ\",\n    \"exerciceComptable\": \"2024\"\n}",
+											"contentType": "application/json",
+											"type": "text"
+										},
+										{
+											"key": "file",
+											"type": "file",
+											"src": "facture.pdf"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/documents/upload",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"documents",
+										"upload"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1,\n    \"numeroPiece\": \"FAC-2024-001\",\n    \"type\": \"FACTURE_ACHAT\",\n    \"categorieComptable\": \"Achats\",\n    \"datePiece\": \"2024-11-15\",\n    \"montant\": 1250.50,\n    \"fournisseur\": \"Fournisseur XYZ\",\n    \"nomFichierOriginal\": \"facture.pdf\",\n    \"typeFichier\": \"application/pdf\",\n    \"tailleFichier\": 245678,\n    \"statut\": \"EN_ATTENTE\",\n    \"exerciceComptable\": \"2024\",\n    \"dateCreation\": \"2024-11-19T10:30:45\",\n    \"message\": null\n}"
+						},
+						{
+							"name": "File Too Large",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{jwt_token}}"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "document",
+											"value": "{}",
+											"contentType": "application/json",
+											"type": "text"
+										},
+										{
+											"key": "file",
+											"type": "file",
+											"src": "large_file.pdf"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/documents/upload",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"documents",
+										"upload"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"La taille du fichier dépasse la limite de 10MB\"\n}"
+						}
+					]
 				}
 			],
 			"description": "Endpoints for société users",
