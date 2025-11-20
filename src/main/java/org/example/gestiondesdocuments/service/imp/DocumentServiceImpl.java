@@ -128,5 +128,11 @@ public class DocumentServiceImpl implements DocumentService {
        return documentRepository.findAll().stream()
                 .map(documentMapper::toUploadResponse).toList();
     }
+    public  List<DocumentUploadResponse> getDocumentsByStatus(Document.StatutDocument status){
+       return documentRepository.findAll()
+               .stream().filter(d->d.getStatut()==status)
+               .map(documentMapper::toUploadResponse)
+               .toList();
+    }
 }
 
