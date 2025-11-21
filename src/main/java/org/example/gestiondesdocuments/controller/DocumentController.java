@@ -101,7 +101,13 @@ public class DocumentController {
         DocumentUploadResponse response=documentService.rejectrDocs(id,motif);
         return ResponseEntity.ok(response);
     }
-
+    @GetMapping("/comptable/bysociete/{societe}")
+    public ResponseEntity<List<DocumentUploadResponse>> getBySociety(
+            @PathVariable("societe") Long societe
+    ){
+       List< DocumentUploadResponse > list=documentService.getDocsBySociete(societe);
+        return ResponseEntity.ok(list);
+    }
 
 
 }

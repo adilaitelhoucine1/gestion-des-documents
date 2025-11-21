@@ -5,9 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.gestiondesdocuments.dto.Documents.DocumentUploadRequest;
 import org.example.gestiondesdocuments.dto.Documents.DocumentUploadResponse;
 import org.example.gestiondesdocuments.entite.Document;
+import org.example.gestiondesdocuments.entite.Societe;
 import org.example.gestiondesdocuments.entite.Utilisateur;
 import org.example.gestiondesdocuments.mapper.DocumentMapper;
 import org.example.gestiondesdocuments.repository.DocumentRepository;
+import org.example.gestiondesdocuments.repository.SocietyRepository;
 import org.example.gestiondesdocuments.repository.UserRepository;
 import org.example.gestiondesdocuments.service.DocumentService;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +24,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -33,6 +36,7 @@ public class DocumentServiceImpl implements DocumentService {
     private final DocumentRepository documentRepository;
     private final UserRepository userRepository;
     private final DocumentMapper documentMapper;
+    private final SocietyRepository societyRepository;
 
     @Value("${app.upload.dir}")
     private String uploadDir;
@@ -170,6 +174,16 @@ public class DocumentServiceImpl implements DocumentService {
 
         return documentMapper.toUploadResponse(savedDocument);
     }
+
+    @Override
+    public List<DocumentUploadResponse> getDocsBySociete(Long societe) {
+        Optional<Societe> societeObject = societyRepository.findById(societe);
+        return documentRepository.findAll().stream()
+                .filter(doc -> societeObject.isPresent() && doc.getSociete().equals(societeObject.get()))
+                .map(documentMapper::toUploadResponse)
+                .toList();
+    }
+
 
 
 }
