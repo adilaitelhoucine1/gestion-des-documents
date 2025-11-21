@@ -137,7 +137,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     @Transactional
-    public DocumentUploadResponse validerDocs(Long id) {
+    public DocumentUploadResponse validerDocs(Long id,String commentaire) {
         Document document = documentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Document non trouvé avec l'ID: " + id));
 
@@ -146,6 +146,7 @@ public class DocumentServiceImpl implements DocumentService {
         }
 
         document.setStatut(Document.StatutDocument.VALIDE);
+        document.setCommentaireComptable(commentaire);
         document.setDateValidation(java.time.LocalDateTime.now());
 
         Document savedDocument = documentRepository.save(document);

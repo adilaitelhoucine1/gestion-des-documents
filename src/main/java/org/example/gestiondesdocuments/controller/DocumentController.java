@@ -80,9 +80,14 @@ public class DocumentController {
         List<DocumentUploadResponse> list=documentService.getDocumentsByStatus(status);
         return ResponseEntity.ok(list);
     }
-    @GetMapping ("/comptable/valider/{id}")
-    public  ResponseEntity<DocumentUploadResponse> validerDocs(@PathVariable("id") Long id){
-        DocumentUploadResponse response=documentService.validerDocs(id);
+    @PutMapping ("/comptable/valider/{id}")
+    public  ResponseEntity<DocumentUploadResponse> validerDocs(
+            @PathVariable("id") Long id,
+            @RequestParam(value = "commenatire",required = false) String commentaire
+
+    )
+    {
+        DocumentUploadResponse response=documentService.validerDocs(id,commentaire);
         return ResponseEntity.ok(response);
     }
 

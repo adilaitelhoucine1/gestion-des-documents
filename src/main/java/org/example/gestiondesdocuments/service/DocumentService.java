@@ -14,6 +14,6 @@ public interface DocumentService {
 
     List<DocumentUploadResponse> getDocumentsByStatus(Document.StatutDocument status);
 
-    DocumentUploadResponse validerDocs(Long id);
+    DocumentUploadResponse validerDocs(Long id,String commentaire);
 }
 

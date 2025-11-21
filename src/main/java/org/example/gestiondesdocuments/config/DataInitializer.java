@@ -30,6 +30,12 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        // Check if data already exists
+        if (roleRepository.count() > 0) {
+            System.out.println("Data already initialized, skipping...");
+            return;
+        }
+
         // Save Roles first
         Role roleComptable = Role.builder()
                 .nom(Role.TypeRole.ROLE_COMPTABLE)
@@ -71,5 +77,6 @@ public class DataInitializer implements CommandLineRunner {
                 .build();
 
         userRepository.saveAll(List.of(utilisateur1, utilisateur2));
+        System.out.println("Initial data created successfully!");
     }
 }

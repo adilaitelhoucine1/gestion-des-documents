@@ -40,6 +40,8 @@ public class DocumentUploadRequest {
     @Pattern(regexp = "\\d{4}", message = "L'exercice comptable doit être une année à 4 chiffres")
     private String exerciceComptable;
 
-    @Size(max = 1000, message = "Le commentaire ne doit pas dépasser 1000 caractères")
-    private String commentaireComptable;
+//    @Size(max = 1000, message = "Le commentaire ne doit pas dépasser 1000 caractères")
+//    private String commentaireComptable;
+
+
 }
