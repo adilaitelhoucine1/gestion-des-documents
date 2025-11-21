@@ -134,5 +134,23 @@ public class DocumentServiceImpl implements DocumentService {
                .map(documentMapper::toUploadResponse)
                .toList();
     }
+
+    @Override
+    @Transactional
+    public DocumentUploadResponse validerDocs(Long id) {
+        Document document = documentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Document non trouvé avec l'ID: " + id));
+
+        if (document.getStatut() == Document.StatutDocument.VALIDE) {
+            throw new RuntimeException("Le document est déjà validé");
+        }
+
+        document.setStatut(Document.StatutDocument.VALIDE);
+        document.setDateValidation(java.time.LocalDateTime.now());
+
+        Document savedDocument = documentRepository.save(document);
+
+        return documentMapper.toUploadResponse(savedDocument);
+    }
 }
 

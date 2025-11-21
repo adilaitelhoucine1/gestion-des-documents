@@ -47,6 +47,8 @@ public class DocumentController {
                     .body(new ErrorResponse("Erreur","Une erreur est survenue lors de l'upload du document"));
         }
     }
+
+
     @PostMapping("/coundinary")
     public ResponseEntity<?> uploadDocumetCloudinary(
             @RequestPart("document") @Valid DocumentUploadRequest request,
@@ -68,16 +70,24 @@ public class DocumentController {
     @GetMapping
     public ResponseEntity<List<DocumentUploadResponse>> getAllDocuments(
     ){
-
             List<DocumentUploadResponse> list=documentService.getAllDocuments();
        return ResponseEntity.ok(list);
     }
-    @GetMapping ("/status")
+    @GetMapping ("/comptable/status")
     public ResponseEntity<List<DocumentUploadResponse>> getByStatus(
-            @RequestParam(value = "status",defaultValue = "En_Attente",required = false) Document.StatutDocument status
+            @RequestParam(value = "status",defaultValue = "EN_ATTENTE",required = false) Document.StatutDocument status
             ){
         List<DocumentUploadResponse> list=documentService.getDocumentsByStatus(status);
         return ResponseEntity.ok(list);
     }
+    @GetMapping ("/comptable/valider/{id}")
+    public  ResponseEntity<DocumentUploadResponse> validerDocs(@PathVariable("id") Long id){
+        DocumentUploadResponse response=documentService.validerDocs(id);
+        return ResponseEntity.ok(response);
+    }
+
+
+
+
 
 }

@@ -13,5 +13,7 @@ public interface DocumentService {
     List<DocumentUploadResponse> getAllDocuments();
 
     List<DocumentUploadResponse> getDocumentsByStatus(Document.StatutDocument status);
+
+    DocumentUploadResponse validerDocs(Long id);
 }
 
