@@ -92,6 +92,15 @@ public class DocumentController {
     }
 
 
+        @PutMapping ("/comptable/reject/{id}")
+    public  ResponseEntity<DocumentUploadResponse> rejectDocs(
+            @PathVariable("id") Long id,
+            @RequestParam(value = "motif",required = true) String motif
+    )
+    {
+        DocumentUploadResponse response=documentService.rejectrDocs(id,motif);
+        return ResponseEntity.ok(response);
+    }
 
 
 

@@ -153,5 +153,24 @@ public class DocumentServiceImpl implements DocumentService {
 
         return documentMapper.toUploadResponse(savedDocument);
     }
+    @Transactional
+    public DocumentUploadResponse rejectrDocs(Long id,String morif) {
+        Document document = documentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Document non trouvé avec l'ID: " + id));
+
+        if (document.getStatut() == Document.StatutDocument.REJETE) {
+            throw new RuntimeException("Le document est déjà REJETE");
+        }
+
+        document.setStatut(Document.StatutDocument.REJETE);
+        document.setCommentaireComptable(morif);
+        document.setDateValidation(java.time.LocalDateTime.now());
+
+        Document savedDocument = documentRepository.save(document);
+
+        return documentMapper.toUploadResponse(savedDocument);
+    }
+
+
 }
 
