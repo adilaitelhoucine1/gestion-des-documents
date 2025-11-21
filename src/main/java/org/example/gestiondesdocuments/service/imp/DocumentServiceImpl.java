@@ -2,6 +2,7 @@ package org.example.gestiondesdocuments.service.imp;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.exception.ExceptionContext;
 import org.example.gestiondesdocuments.dto.Documents.DocumentUploadRequest;
 import org.example.gestiondesdocuments.dto.Documents.DocumentUploadResponse;
 import org.example.gestiondesdocuments.entite.Document;
@@ -13,6 +14,9 @@ import org.example.gestiondesdocuments.repository.SocietyRepository;
 import org.example.gestiondesdocuments.repository.UserRepository;
 import org.example.gestiondesdocuments.service.DocumentService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -184,6 +188,15 @@ public class DocumentServiceImpl implements DocumentService {
                 .toList();
     }
 
+    public List<DocumentUploadResponse> getDocsByExercice(String username, int year){
+
+        Utilisateur user=userRepository.findByEmail(username).orElseThrow(()->new RuntimeException("user not found"));
+       // Optional<Societe> societe=societyRepository.existsDistinctByEmailContact(authentication);
+
+            List<DocumentUploadResponse> docs= documentRepository.getDocsByExercice(user.getId(), year);
+        return docs;
+
+    }
 
 
 }

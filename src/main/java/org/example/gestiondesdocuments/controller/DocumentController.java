@@ -109,5 +109,15 @@ public class DocumentController {
         return ResponseEntity.ok(list);
     }
 
+    @GetMapping("/comptable/societe/exercice/{year}")
+    public  ResponseEntity<List<DocumentUploadResponse>> getByExercice(
+            @RequestParam("year") int year,
+            Authentication authentication
+    ){
+        String username=authentication.getName();
+        List< DocumentUploadResponse > list=documentService.getDocsByExercice(username,year);
+        return ResponseEntity.ok(list);
+
+    }
 
 }
