@@ -188,13 +188,16 @@ public class DocumentServiceImpl implements DocumentService {
                 .toList();
     }
 
-    public List<DocumentUploadResponse> getDocsByExercice(String username, int year){
+    public List<DocumentUploadResponse> getDocsByExercice(String username, String year){
 
-        Utilisateur user=userRepository.findByEmail(username).orElseThrow(()->new RuntimeException("user not found"));
-       // Optional<Societe> societe=societyRepository.existsDistinctByEmailContact(authentication);
+      //  Utilisateur user=userRepository.findByEmail(username).orElseThrow(()->new RuntimeException("user not found"));
 
-            List<DocumentUploadResponse> docs= documentRepository.getDocsByExercice(user.getId(), year);
-        return docs;
+
+        return documentRepository.findAll().stream().
+                filter(doc->doc.getExerciceComptable().equals(year)
+                       )
+                .map(documentMapper::toUploadResponse)
+                .toList();
 
     }
 

@@ -2,6 +2,7 @@ package org.example.gestiondesdocuments.controller;
 
 
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.example.gestiondesdocuments.dto.Documents.DocumentUploadRequest;
 import org.example.gestiondesdocuments.dto.Documents.DocumentUploadResponse;
@@ -111,7 +112,7 @@ public class DocumentController {
 
     @GetMapping("/comptable/societe/exercice/{year}")
     public  ResponseEntity<List<DocumentUploadResponse>> getByExercice(
-            @RequestParam("year") int year,
+            @PathVariable("year") String year,
             Authentication authentication
     ){
         String username=authentication.getName();

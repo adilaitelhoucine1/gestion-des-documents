@@ -17,6 +17,6 @@ public interface DocumentService {
     DocumentUploadResponse validerDocs(Long id,String commentaire);
     DocumentUploadResponse rejectrDocs(Long id,String motif);
     List<DocumentUploadResponse>  getDocsBySociete(Long societe);
-    List<DocumentUploadResponse>  getDocsByExercice(String username, int year);
+    List<DocumentUploadResponse>  getDocsByExercice(String username, String year);
 }
 
