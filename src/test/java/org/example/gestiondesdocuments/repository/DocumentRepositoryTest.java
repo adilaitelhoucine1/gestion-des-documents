@@ -119,17 +119,17 @@ class DocumentRepositoryTest {
         // Créer des documents pour différents exercices
         Document doc2024 = createTestDocument("DOC-2024-001", 2024);
         doc2024.setDatePiece(LocalDate.of(2024, 3, 15));
-
+        
         Document doc2023 = createTestDocument("DOC-2023-001", 2023);
         doc2023.setDatePiece(LocalDate.of(2023, 5, 20));
-
+        
         entityManager.persist(doc2024);
         entityManager.persist(doc2023);
         entityManager.flush();
 
         // Récupérer tous les documents et vérifier qu'ils appartiennent à la bonne société
         List<Document> allDocuments = documentRepository.findAll();
-
+        
         // Vérifications
         assertThat(allDocuments).isNotEmpty();
         assertThat(allDocuments).allMatch(doc -> doc.getSociete().getId().equals(societe.getId()));
