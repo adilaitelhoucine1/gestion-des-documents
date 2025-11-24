@@ -1,6 +1,8 @@
 package org.example.gestiondesdocuments.config;
 
 import org.example.gestiondesdocuments.security.JwtRequestFilter;
+import org.example.gestiondesdocuments.security.JwtTokenService;
+import org.example.gestiondesdocuments.security.LoginAuthenticationFilter;
 import org.example.gestiondesdocuments.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,14 +24,22 @@ public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
     private final JwtRequestFilter jwtRequestFilter;
+    private final JwtTokenService jwtTokenService;
 
-    public SecurityConfig(CustomUserDetailsService userDetailsService, JwtRequestFilter jwtRequestFilter) {
+    public SecurityConfig(CustomUserDetailsService userDetailsService,
+                         JwtRequestFilter jwtRequestFilter,
+                         JwtTokenService jwtTokenService) {
         this.userDetailsService = userDetailsService;
         this.jwtRequestFilter = jwtRequestFilter;
+        this.jwtTokenService = jwtTokenService;
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+
+        // Create login authentication filter
+        LoginAuthenticationFilter loginAuthenticationFilter =
+                new LoginAuthenticationFilter("/api/auth/login", authenticationManager, jwtTokenService);
 
         http
                 .csrf(csrf -> csrf.disable())
@@ -47,7 +57,11 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        // Add login filter first to handle /api/auth/login endpoint
+        http.addFilterBefore(loginAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        // Add JWT filter to handle token validation for other endpoints
+        http.addFilterAfter(jwtRequestFilter, LoginAuthenticationFilter.class);
 
 
         return http.build();

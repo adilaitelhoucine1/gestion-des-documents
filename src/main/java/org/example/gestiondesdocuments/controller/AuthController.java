@@ -19,6 +19,10 @@ public class AuthController {
         this.authService = authService;
     }
 
+    /**
+     * Login endpoint - Note: This is now primarily handled by LoginAuthenticationFilter
+     * This controller method serves as documentation and fallback if filter is bypassed
+     */
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
         try {
